@@ -19,7 +19,7 @@ class Audit(Lego):
             try:
                 modname = message['text'].split()[2]
             except:
-                
+                pass
         return
 
     def get_name(self):
