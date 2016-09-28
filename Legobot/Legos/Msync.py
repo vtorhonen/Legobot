@@ -9,11 +9,17 @@ class Audit(Lego):
         if len(message['text'].split()) == 1:
             # No args supplied
             base_url = 'https://raw.githubusercontent.com/voxpupuli/'
-            msync_blob = requests.get('modulesync_config/master/moduleroot/.msync.yml')
+            msync_blob = requests.get(base_url + 'modulesync_config/master/moduleroot/.msync.yml')
             msync_text = msync_blob.text
             self.reply(message, msync_text.strip('\n'))
         elif len(message['text'].split() > 1):
             arg = message['text'].split()[1]
+
+        if arg == "getver":
+            try:
+                modname = message['text'].split()[2]
+            except:
+                
         return
 
     def get_name(self):
