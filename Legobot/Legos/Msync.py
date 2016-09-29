@@ -35,8 +35,8 @@ class Audit(Lego):
     def get_current_msync(self):
         try:
             msync_version = requests.get('https://github.com/voxpupuli/modulesync_config/blob/master/moduleroot/.msync.yml')
-            msync_version = msync_version.text.strip('\n')
-            return msync_version
+            msync_version = msync_version.text
+            return msync_version.strip('\n')
         except Exception as e:
             logger.debug('Caught exception in !msync:' + e)
             return "Unable to fetch latest msync version."
