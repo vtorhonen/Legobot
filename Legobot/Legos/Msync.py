@@ -10,11 +10,11 @@ class Audit(Lego):
         return message['text'].split()[0] == '!msync'
 
     def handle(self,message):
-        arg = parse_args(message)
+        arg = self.parse_args(message)
         if arg == "getver":
             try:
                 modname = message['text'].split()[2]
-                response = get_single_version(modname)
+                response = self.get_single_version(modname)
                 self.reply(message,response)
             except Exception as e:
                 self.reply(message, "womp womp :/ unable to get version.")
