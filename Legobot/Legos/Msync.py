@@ -23,7 +23,7 @@ class Audit(Lego):
                 self.reply(message,response)
             except Exception as e:
                 self.reply(message, "womp womp :/ unable to get version.")
-                logger.debug('Caught exception in !msync:' + str(e))
+                logger.exception('Caught exception in !msync:' + str(e))
         return
 
     def get_name(self):
@@ -36,9 +36,9 @@ class Audit(Lego):
         try:
             msync_version = requests.get('https://github.com/voxpupuli/modulesync_config/blob/master/moduleroot/.msync.yml')
             msync_version = msync_version.text
-            return msync_version.strip('\n')
+            return msync_version.strip()
         except Exception as e:
-            logger.debug('Caught exception in !msync:' + e)
+            logger.exception('Caught exception in !msync:' + e)
             return "Unable to fetch latest msync version."
 
 
