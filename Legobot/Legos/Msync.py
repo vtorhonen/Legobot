@@ -10,31 +10,36 @@ class Audit(Lego):
         return message['text'].split()[0] == '!msync'
 
     def handle(self,message):
-        arg = None
-        if len(message['text'].split()) == 1:
-            # No args supplied
-            msync_blob = requests.get(base_url + 'modulesync_config/master/moduleroot/.msync.yml')
-            msync_text = msync_blob.text
-            self.reply(message, msync_text.strip('\n'))
-        elif len(message['text'].split()) > 1:
-            arg = message['text'].split()[1]
-
+        arg = parse_args(message)
         if arg == "getver":
             try:
                 modname = message['text'].split()[2]
-                #msync_ver = requests.get('https://raw.githubusercontent.com/voxpupuli/puppet-sftp_jail/master/.msync.yml')
-                msync_ver = requests.get(base_url + modname + '/master/.msync.yml')
-                msync_ver = msync_ver.text
-                logger.debug('modname variable:' + modname)
-                logger.debug('msync_ver variable: ' + msync_ver)
-                self.reply(message, msync_ver.strip('\n'))
-            except:
-                self.reply(message, 'Could not find a module to query :/')
-
+                response = get_single_version(modname)
+                self.reply(message,response)
+            except Exception as e:
+                self.reply(message, "womp womp :/ unable to get version.")
+                logger.debug('Caught exception in !getver:' + e)
         return
 
     def get_name(self):
         return 'msync'
 
     def get_help(self):
-        return 'Discover information about the status of modulesync on managed repositories. Usage: !msync [olderthan a.b.c]'
+        return 'Discover information about the status of modulesync on managed repositories. Usage: !msync [getver modulename].'
+
+    def get_single_version(self,modname):
+        try:
+            msync_ver = requests.get(base_url + modname + '/master/.msync.yml')
+            msync_ver = msync_ver.text
+            return msync_ver.strip('\n')
+        except:
+            return 'Could not find a module to query :/'
+
+    def parse_args(self,message):
+        arg = None
+        if len(message['text'].split()) == 1:
+            # No args supplied
+            arg = None
+        elif len(message['text'].split()) > 1:
+            arg = message['text'].split()[1]
+        return arg
