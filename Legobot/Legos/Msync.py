@@ -34,7 +34,7 @@ class Audit(Lego):
 
     def get_current_msync(self):
         try:
-            msync_version = requests.get('https://raw.githubusercontent.com/voxpupuli/modulesync_config/master/moduleroot/.msync.yml')
+            msync_version = requests.get("%smodulesync_config/master/moduleroot/.msync.yml" % base_url)
             msync_version = msync_version.text
             return msync_version.strip()
         except Exception as e:
