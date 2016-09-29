@@ -14,6 +14,7 @@ class Audit(Lego):
 
         if arg == None:
             response = self.get_current_msync()
+            self.reply(message, response)
 
         elif arg == "getver":
             try:
