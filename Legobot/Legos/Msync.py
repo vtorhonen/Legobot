@@ -31,6 +31,16 @@ class Audit(Lego):
     def get_help(self):
         return 'Discover information about the status of modulesync on managed repositories. Usage: !msync [getver modulename].'
 
+    def get_current_msync(self):
+        try:
+            msync_version = requests.get(base_url + 'modulesync_config/blob/master/moduleroot/.msync.yml')
+            msync_version = msync_version.text.strip('\n')
+            return msync_version
+        except Exception as e:
+            logger.debug('Caught exception in !msync:' + e)
+            return "Unable to fetch latest msync version."
+
+
     def get_single_version(self,modname):
         try:
             msync_ver = requests.get(base_url + modname + '/master/.msync.yml')
